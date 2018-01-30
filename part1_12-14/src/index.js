@@ -5,7 +5,9 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: 0
+      selected: 0,
+      points: Array.apply(null, Array(anecdotes.length)).map(Number.prototype.valueOf,0),
+      max: undefined,
     }
   }
 
@@ -15,17 +17,37 @@ class App extends React.Component {
       console.log(rnd);
       this.setState({ selected: rnd });
     }
+  }
 
+  upvote = () => {
+    return () => {
+      this.state.selected
+      const copy = [...this.state.points];
+      copy[this.state.selected] += 1;
+      console.log(copy);
+      var i = copy.indexOf(Math.max(...copy));
+      this.setState({ max: i })
+      console.log(i);
+      this.setState({ points: copy });
+    }
   }
 
   render() {
     return (
       <div>
         <p>{this.props.anecdotes[this.state.selected]}</p>
+        <p>has {this.state.points[this.state.selected]} votes</p>
         <Button
           handleClick={this.setSelected()}
           text="next anecdote"
         />
+        <Button
+          handleClick={this.upvote()}
+          text="upvote"
+        />
+        <h1>anecdote with most votes</h1>
+        <p>{this.props.anecdotes[this.state.max]}</p>
+        <p>has {this.state.points[this.state.max]} votes</p>
       </div>
     )
   }
